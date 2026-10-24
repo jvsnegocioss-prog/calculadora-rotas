@@ -54,6 +54,7 @@ main{max-width:760px;margin:0 auto;padding:16px;display:grid;gap:14px}.card{back
 <div class="row"><span>Custo total estimado</span><strong id="totalCost">R$ 14,12</strong></div>
 <div class="row"><span>Sobra por km</span><strong id="perKm">R$ 0,39</strong></div>
 <div class="row"><span>Pagamento mínimo para sua meta</span><strong id="minimum">R$ 24,26</strong></div>
+<div class="row"><span>Percentual de lucro sobre o pagamento</span><strong id="profitPercent" style="color:var(--green)">43,84%</strong></div>
 </div>
 </div>
 <div class="buttons"><button id="save" class="primary">＋ Salvar resultado</button><button id="reset" class="secondary">Limpar tudo</button></div>
@@ -76,6 +77,7 @@ function calc(){
  const received=val('payment')+val('bonus'), km=val('pickup')+val('routeKm'), fuel=val('fuelPrice'), consumption=val('consumption'), wear=val('otherCost'), target=val('target');
  const litres=consumption>0?km/consumption:0, fuelCost=litres*fuel, wearCost=km*wear, costs=fuelCost+wearCost, net=received-costs, perKm=km>0?net/km:0, minimum=km*(consumption>0?fuel/consumption:0)+km*wear+km*target;
  $('net').textContent=brl(net);$('received').textContent=brl(received);$('totalKm').textContent=dec(km,1)+' km';$('litres').textContent=dec(litres,2)+' L';$('fuelCost').textContent=brl(fuelCost);$('wearCost').textContent=brl(wearCost);$('totalCost').textContent=brl(costs);$('perKm').textContent=brl(perKm);$('minimum').textContent=brl(minimum);
+ const profitPercent=received>0?(net/received)*100:0;const profitEl=$('profitPercent');profitEl.textContent=dec(profitPercent,2)+'%';profitEl.style.color=profitPercent<0?'var(--red)':'var(--green)';
  const status=$('status');status.className='status';
  if(km<=0||consumption<=0||fuel<=0||received<=0){status.textContent='Confira os dados';status.classList.add('warn')}
  else if(net<0){status.textContent='Não compensa';status.classList.add('bad')}
