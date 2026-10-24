@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#202c49">
+<meta name="description" content="Calcule o custo de combustível, desgaste e sobra das ofertas de entrega.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Calculadora de Rotas</title>
+<style>
+:root{color-scheme:light;--navy:#202c49;--bg:#f3f5f9;--ink:#172033;--muted:#687386;--line:#e1e6ee;--green:#087f5b;--red:#c92a2a;--amber:#9a6700}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+header{background:var(--navy);color:white;padding:24px 18px 22px;border-radius:0 0 24px 24px;box-shadow:0 5px 18px #15213a22}
+.header-inner{max-width:760px;margin:auto;display:flex;gap:13px;align-items:center}.logo{width:52px;height:52px;border-radius:15px;background:#ffffff1a;display:grid;place-items:center;font-size:27px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:#cbd5e8;font-weight:700}.title{font-size:23px;font-weight:800;margin:3px 0}.subtitle{font-size:13px;color:#d8e0ef}
+main{max-width:760px;margin:0 auto;padding:16px;display:grid;gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:18px;box-shadow:0 3px 12px #1b294010}.card h2{font-size:17px;margin:0 0 15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted);font-weight:700}input{width:100%;min-width:0;border:1px solid #d8deea;border-radius:11px;padding:13px 12px;font-size:17px;color:var(--ink);background:#fff;outline:none}input:focus{border-color:#5876b9;box-shadow:0 0 0 3px #5876b91c}.hint{font-size:12px;line-height:1.45;color:var(--muted);margin:12px 0 0}.result{background:#f8fafc;border:1px solid var(--line);border-radius:15px;padding:15px}.result-label{font-size:12px;color:var(--muted);font-weight:700}.big{font-size:32px;letter-spacing:-.8px;font-weight:850;margin:5px 0 8px}.status{display:inline-block;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;background:#e9edf4;color:#43506a}.status.good{background:#dff7eb;color:var(--green)}.status.bad{background:#ffebeb;color:var(--red)}.status.warn{background:#fff3d6;color:var(--amber)}.rows{display:grid;gap:0;margin-top:10px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}.row:last-child{border-bottom:0}.row span:first-child{color:var(--muted)}.row strong{text-align:right;font-variant-numeric:tabular-nums}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button{border:0;border-radius:12px;padding:13px 12px;font-size:14px;font-weight:800;cursor:pointer;min-height:46px}.primary{background:var(--navy);color:#fff}.secondary{background:#edf1f7;color:var(--navy)}.danger{background:#fff0f0;color:var(--red)}.history-item{border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:10px}.history-head{display:flex;justify-content:space-between;gap:10px;font-weight:800}.history-meta{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}.history-empty{font-size:13px;color:var(--muted)}footer{max-width:760px;margin:0 auto;padding:0 18px 28px;color:var(--muted);font-size:12px;line-height:1.5}.install-tip{background:#eaf0ff;border-radius:12px;padding:12px;font-size:13px;line-height:1.5;margin-top:12px}.hidden{display:none!important}
+@media(min-width:600px){main{grid-template-columns:1fr 1fr;align-items:start}header{border-radius:0 0 28px 28px}.card.full-card{grid-column:1/-1}.big{font-size:36px}}
+</style>
+</head>
+<body>
+<header><div class="header-inner"><div class="logo" aria-hidden="true">🚗</div><div><div class="eyebrow">Ferramenta de trabalho</div><div class="title">Calculadora de Rotas</div><div class="subtitle">Envios Extra · Chevrolet Onix 1.0</div></div></div></header>
+<main>
+<section class="card">
+<h2>1. Dados da oferta</h2>
+<div class="grid">
+<div class="field"><label for="payment">Valor da rota (R$)</label><input id="payment" inputmode="decimal" type="number" min="0" step=".01" value="19.80"></div>
+<div class="field"><label for="bonus">Bônus (R$)</label><input id="bonus" inputmode="decimal" type="number" min="0" step=".01" value="0"></div>
+<div class="field"><label for="pickup">Distância até coleta (km)</label><input id="pickup" inputmode="decimal" type="number" min="0" step=".1" value="2.7"></div>
+<div class="field"><label for="routeKm">Distância da rota (km)</label><input id="routeKm" inputmode="decimal" type="number" min="0" step=".1" value="12"></div>
+</div>
+<p class="hint">Informe o pagamento total da oferta e as distâncias mostradas no aplicativo. Se a distância da rota já incluir o trajeto até a coleta, evite somar esse trecho duas vezes.</p>
+</section>
+<section class="card">
+<h2>2. Custos do veículo</h2>
+<div class="grid">
+<div class="field"><label for="fuelPrice">Gasolina (R$/L)</label><input id="fuelPrice" inputmode="decimal" type="number" min="0" step=".01" value="7.29"></div>
+<div class="field"><label for="consumption">Consumo (km/L)</label><input id="consumption" inputmode="decimal" type="number" min=".1" step=".1" value="9"></div>
+<div class="field full"><label for="otherCost">Manutenção e desgaste (R$/km)</label><input id="otherCost" inputmode="decimal" type="number" min="0" step=".01" value="0.15"></div>
+<div class="field full"><label for="target">Sobra mínima desejada por km (R$)</label><input id="target" inputmode="decimal" type="number" min="0" step=".05" value="1.50"></div>
+</div>
+<p class="hint">Manutenção e desgaste são uma estimativa ajustável. Coloque 0 para calcular apenas a gasolina.</p>
+</section>
+<section class="card full-card">
+<h2>3. Resultado da rota</h2>
+<div class="result">
+<div class="result-label">Sobra estimada após os custos informados</div>
+<div id="net" class="big">R$ 7,89</div><span id="status" class="status good">Boa oferta</span>
+<div class="rows">
+<div class="row"><span>Pagamento total</span><strong id="received">R$ 19,80</strong></div>
+<div class="row"><span>Quilômetros totais</span><strong id="totalKm">14,7 km</strong></div>
+<div class="row"><span>Gasolina consumida</span><strong id="litres">1,63 L</strong></div>
+<div class="row"><span>Custo da gasolina</span><strong id="fuelCost">R$ 11,91</strong></div>
+<div class="row"><span>Manutenção e desgaste</span><strong id="wearCost">R$ 2,21</strong></div>
+<div class="row"><span>Custo total estimado</span><strong id="totalCost">R$ 14,12</strong></div>
+<div class="row"><span>Sobra por km</span><strong id="perKm">R$ 0,39</strong></div>
+<div class="row"><span>Pagamento mínimo para sua meta</span><strong id="minimum">R$ 24,26</strong></div>
+</div>
+</div>
+<div class="buttons"><button id="save" class="primary">＋ Salvar resultado</button><button id="reset" class="secondary">Restaurar exemplo</button></div>
+<div class="install-tip" id="installHelp"><strong>Instalar no iPhone:</strong> publique esta pasta em um endereço HTTPS; abra o link no Safari, toque em Compartilhar e escolha “Adicionar à Tela de Início”.</div>
+</section>
+<section class="card full-card">
+<h2>4. Histórico salvo neste aparelho</h2>
+<div id="history"><div class="history-empty">As rotas salvas aparecerão aqui.</div></div>
+<div class="buttons"><button id="export" class="secondary">Exportar CSV</button><button id="clear" class="danger">Apagar histórico</button></div>
+<p class="hint">O histórico fica guardado neste navegador/aparelho. Exportar CSV cria uma cópia para abrir em uma planilha.</p>
+</section>
+</main>
+<footer>Estimativa financeira, não garantia de lucro. Não inclui pedágios, estacionamento, impostos, tempo de trabalho ou outros custos não informados. Verifique se as distâncias da oferta são de ida, total ou apenas do percurso de entrega.</footer>
+<script>
+const $=id=>document.getElementById(id);
+const ids=['payment','bonus','pickup','routeKm','fuelPrice','consumption','otherCost','target'];
+const val=id=>Math.max(0,Number($(id).value)||0);
+const brl=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const dec=(n,d=2)=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+function calc(){
+ const received=val('payment')+val('bonus'), km=val('pickup')+val('routeKm'), fuel=val('fuelPrice'), consumption=val('consumption'), wear=val('otherCost'), target=val('target');
+ const litres=consumption>0?km/consumption:0, fuelCost=litres*fuel, wearCost=km*wear, costs=fuelCost+wearCost, net=received-costs, perKm=km>0?net/km:0, minimum=km*(consumption>0?fuel/consumption:0)+km*wear+km*target;
+ $('net').textContent=brl(net);$('received').textContent=brl(received);$('totalKm').textContent=dec(km,1)+' km';$('litres').textContent=dec(litres,2)+' L';$('fuelCost').textContent=brl(fuelCost);$('wearCost').textContent=brl(wearCost);$('totalCost').textContent=brl(costs);$('perKm').textContent=brl(perKm);$('minimum').textContent=brl(minimum);
+ const status=$('status');status.className='status';
+ if(km<=0||consumption<=0||fuel<=0||received<=0){status.textContent='Confira os dados';status.classList.add('warn')}
+ else if(net<0){status.textContent='Não compensa';status.classList.add('bad')}
+ else if(perKm>=target){status.textContent='Boa oferta';status.classList.add('good')}
+ else{status.textContent='Avalie com cuidado';status.classList.add('warn')}
+ return {received,km,litres,fuelCost,wearCost,costs,net,perKm,minimum,inputs:ids.reduce((o,id)=>(o[id]=$(id).value,o),{})};
+}
+ids.forEach(id=>$(id).addEventListener('input',calc));
+function getHistory(){try{return JSON.parse(localStorage.getItem('rotasHistory')||'[]')}catch(e){return []}}
+function setHistory(h){localStorage.setItem('rotasHistory',JSON.stringify(h));renderHistory()}
+function renderHistory(){
+ const h=getHistory(), el=$('history');
+ if(!h.length){el.innerHTML='<div class="history-empty">As rotas salvas aparecerão aqui.</div>';return}
+ el.innerHTML='';
+ h.forEach((x,i)=>{const div=document.createElement('div');div.className='history-item';
+ const head=document.createElement('div');head.className='history-head';
+ const name=document.createElement('span');name.textContent=(h.length-i)+'. '+x.date;
+ const net=document.createElement('strong');net.textContent=brl(x.net);net.style.color=x.net<0?'#c92a2a':'#087f5b';head.append(name,net);
+ const meta=document.createElement('div');meta.className='history-meta';meta.textContent=brl(x.received)+' recebidos · '+dec(x.km,1)+' km · gasolina '+brl(x.fuelCost)+' · outros custos '+brl(x.wearCost);
+ const actions=document.createElement('div');actions.className='buttons';
+ const load=document.createElement('button');load.className='secondary';load.textContent='Reutilizar';load.onclick=()=>{Object.entries(x.inputs).forEach(([id,v])=>{if($(id))$(id).value=v});calc();window.scrollTo({top:0,behavior:'smooth'})};
+ const del=document.createElement('button');del.className='danger';del.textContent='Excluir';del.onclick=()=>setHistory(getHistory().filter((_,j)=>j!==i));
+ actions.append(load,del);div.append(head,meta,actions);el.append(div);
+ });
+}
+$('save').addEventListener('click',()=>{const c=calc();if(c.km<=0||val('consumption')<=0||c.received<=0){alert('Preencha pagamento, distâncias e consumo corretamente antes de salvar.');return}
+ const h=getHistory();h.unshift({...c,date:new Date().toLocaleString('pt-BR'),inputs:c.inputs});setHistory(h.slice(0,100));$('save').textContent='✓ Rota salva';setTimeout(()=>$('save').textContent='＋ Salvar resultado',1400)});
+$('reset').addEventListener('click',()=>{const defaults={payment:'19.80',bonus:'0',pickup:'2.7',routeKm:'12',fuelPrice:'7.29',consumption:'9',otherCost:'0.15',target:'1.50'};Object.entries(defaults).forEach(([id,v])=>$(id).value=v);calc()});
+$('clear').addEventListener('click',()=>{if(confirm('Apagar todo o histórico salvo neste aparelho?')){localStorage.removeItem('rotasHistory');renderHistory()}});
+$('export').addEventListener('click',()=>{const h=getHistory();if(!h.length){alert('Não há rotas salvas para exportar.');return}
+ const rows=[['Data','Recebimento (R$)','Distância total (km)','Gasolina (R$)','Outros custos (R$)','Sobra (R$)','Sobra por km (R$)'],...h.map(x=>[x.date,x.received.toFixed(2),x.km.toFixed(2),x.fuelCost.toFixed(2),x.wearCost.toFixed(2),x.net.toFixed(2),x.perKm.toFixed(2)])];
+ const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(';')).join('\r\n');
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='historico_rotas.csv';a.click();URL.revokeObjectURL(url)});
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+calc();renderHistory();
+</script>
+</body>
+</html>
