@@ -15,7 +15,6 @@ header{background:var(--navy);color:white;padding:24px 18px 22px;border-radius:0
 .header-inner{max-width:760px;margin:auto;display:flex;gap:13px;align-items:center}.logo{width:52px;height:52px;border-radius:15px;background:#ffffff1a;display:grid;place-items:center;font-size:27px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:#cbd5e8;font-weight:700}.title{font-size:23px;font-weight:800;margin:3px 0}.subtitle{font-size:13px;color:#d8e0ef}
 main{max-width:760px;margin:0 auto;padding:16px;display:grid;gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:18px;box-shadow:0 3px 12px #1b294010}.card h2{font-size:17px;margin:0 0 15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted);font-weight:700}input{width:100%;min-width:0;border:1px solid #d8deea;border-radius:11px;padding:13px 12px;font-size:17px;color:var(--ink);background:#fff;outline:none}input:focus{border-color:#5876b9;box-shadow:0 0 0 3px #5876b91c}.hint{font-size:12px;line-height:1.45;color:var(--muted);margin:12px 0 0}.result{background:#f8fafc;border:1px solid var(--line);border-radius:15px;padding:15px}.result-label{font-size:12px;color:var(--muted);font-weight:700}.big{font-size:32px;letter-spacing:-.8px;font-weight:850;margin:5px 0 8px}.status{display:inline-block;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;background:#e9edf4;color:#43506a}.status.good{background:#dff7eb;color:var(--green)}.status.bad{background:#ffebeb;color:var(--red)}.status.warn{background:#fff3d6;color:var(--amber)}.rows{display:grid;gap:0;margin-top:10px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}.row:last-child{border-bottom:0}.row span:first-child{color:var(--muted)}.row strong{text-align:right;font-variant-numeric:tabular-nums}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button{border:0;border-radius:12px;padding:13px 12px;font-size:14px;font-weight:800;cursor:pointer;min-height:46px}.primary{background:var(--navy);color:#fff}.secondary{background:#edf1f7;color:var(--navy)}.danger{background:#fff0f0;color:var(--red)}.history-item{border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:10px}.history-head{display:flex;justify-content:space-between;gap:10px;font-weight:800}.history-meta{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}.history-empty{font-size:13px;color:var(--muted)}footer{max-width:760px;margin:0 auto;padding:0 18px 28px;color:var(--muted);font-size:12px;line-height:1.5}.install-tip{background:#eaf0ff;border-radius:12px;padding:12px;font-size:13px;line-height:1.5;margin-top:12px}.hidden{display:none!important}
 @media(min-width:600px){main{grid-template-columns:1fr 1fr;align-items:start}header{border-radius:0 0 28px 28px}.card.full-card{grid-column:1/-1}.big{font-size:36px}}
-.scan-panel{border:1px dashed #9aa9c2;background:#f8faff;border-radius:14px;padding:14px}.scan-panel p{font-size:13px;line-height:1.45;color:var(--muted)}.scan-actions{display:grid;grid-template-columns:1fr;gap:9px}.scan-status{font-size:13px;line-height:1.5;margin-top:10px;color:var(--muted);white-space:pre-wrap}.scan-preview{max-width:100%;max-height:240px;border-radius:12px;margin-top:10px}.scan-text{width:100%;min-height:90px;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:12px;color:var(--muted);background:#fff}@media(min-width:600px){.scan-actions{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -30,18 +29,6 @@ main{max-width:760px;margin:0 auto;padding:16px;display:grid;gap:14px}.card{back
 <div class="field"><label for="routeKm">Distância da rota (km)</label><input id="routeKm" inputmode="decimal" type="number" min="0" step=".1" value="12"></div>
 </div>
 <p class="hint">Informe o pagamento total da oferta e as distâncias mostradas no aplicativo. Se a distância da rota já incluir o trajeto até a coleta, evite somar esse trecho duas vezes.</p>
-</section>
-<section class="card full-card" id="scanCard">
-<h2>Leitura automática da oferta</h2>
-<div class="scan-panel">
-<p><strong>Como usar:</strong> no Envios Extra, faça uma captura de tela da oferta. Depois volte aqui e escolha a imagem. A calculadora tentará ler os valores e calcular automaticamente. No iPhone, o compartilhamento direto de uma tela de outro app para um site não é suportado de forma confiável; importar uma captura é o método compatível.</p>
-<div class="scan-actions"><button id="pickScreenshot" class="primary" type="button">📷 Escolher captura de tela</button><button id="clearScan" class="secondary" type="button">Limpar leitura</button></div>
-<input id="screenshotFile" type="file" accept="image/*" class="hidden">
-<img id="scanPreview" class="scan-preview hidden" alt="Prévia da captura escolhida">
-<div id="scanStatus" class="scan-status" aria-live="polite">Nenhuma imagem selecionada.</div>
-<details id="ocrDetails" class="hidden"><summary>Texto identificado (conferir)</summary><textarea id="ocrText" class="scan-text" readonly></textarea></details>
-</div>
-<p class="hint">A leitura pode confundir números ou não reconhecer o layout da oferta. Confira os campos preenchidos antes de aceitar a rota. O processamento da imagem é feito no navegador usando a biblioteca de OCR carregada pela internet.</p>
 </section>
 <section class="card">
 <h2>2. Custos do veículo</h2>
@@ -69,7 +56,8 @@ main{max-width:760px;margin:0 auto;padding:16px;display:grid;gap:14px}.card{back
 <div class="row"><span>Pagamento mínimo para sua meta</span><strong id="minimum">R$ 24,26</strong></div>
 </div>
 </div>
-<div class="buttons"><button id="save" class="primary">＋ Salvar resultado</button><button id="reset" class="secondary">Limpar tudo</button></div>
+<div class="buttons"><button id="save" class="primary">＋ Salvar resultado</button><button id="reset" class="secondary">Restaurar exemplo</button></div>
+<div class="install-tip" id="installHelp"><strong>Instalar no iPhone:</strong> publique esta pasta em um endereço HTTPS; abra o link no Safari, toque em Compartilhar e escolha “Adicionar à Tela de Início”.</div>
 </section>
 <section class="card full-card">
 <h2>4. Histórico salvo neste aparelho</h2>
@@ -116,88 +104,12 @@ function renderHistory(){
 }
 $('save').addEventListener('click',()=>{const c=calc();if(c.km<=0||val('consumption')<=0||c.received<=0){alert('Preencha pagamento, distâncias e consumo corretamente antes de salvar.');return}
  const h=getHistory();h.unshift({...c,date:new Date().toLocaleString('pt-BR'),inputs:c.inputs});setHistory(h.slice(0,100));$('save').textContent='✓ Rota salva';setTimeout(()=>$('save').textContent='＋ Salvar resultado',1400)});
-$('reset').addEventListener('click',()=>{ids.forEach(id=>$(id).value='');calc();$('save').textContent='＋ Salvar resultado'});
+$('reset').addEventListener('click',()=>{const defaults={payment:'19.80',bonus:'0',pickup:'2.7',routeKm:'12',fuelPrice:'7.29',consumption:'9',otherCost:'0.15',target:'1.50'};Object.entries(defaults).forEach(([id,v])=>$(id).value=v);calc()});
 $('clear').addEventListener('click',()=>{if(confirm('Apagar todo o histórico salvo neste aparelho?')){localStorage.removeItem('rotasHistory');renderHistory()}});
 $('export').addEventListener('click',()=>{const h=getHistory();if(!h.length){alert('Não há rotas salvas para exportar.');return}
  const rows=[['Data','Recebimento (R$)','Distância total (km)','Gasolina (R$)','Outros custos (R$)','Sobra (R$)','Sobra por km (R$)'],...h.map(x=>[x.date,x.received.toFixed(2),x.km.toFixed(2),x.fuelCost.toFixed(2),x.wearCost.toFixed(2),x.net.toFixed(2),x.perKm.toFixed(2)])];
  const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(';')).join('\r\n');
  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='historico_rotas.csv';a.click();URL.revokeObjectURL(url)});
-// Leitura de captura de tela (OCR). Não há leitura contínua de outro aplicativo.
-$('pickScreenshot').addEventListener('click',()=>$('screenshotFile').click());
-$('clearScan').addEventListener('click',()=>{$('screenshotFile').value='';$('scanPreview').classList.add('hidden');$('ocrDetails').classList.add('hidden');$('ocrText').value='';$('scanStatus').textContent='Leitura limpa. Os campos da oferta não foram alterados.';});
-function numberNear(text, labels){
- const lines=text.split(/\n+/).map(x=>x.trim()).filter(Boolean);
- for(let i=0;i<lines.length;i++){
-  const line=lines[i];
-  if(labels.some(re=>re.test(line))){
-   const candidates=[line,...lines.slice(i+1,Math.min(lines.length,i+4))].join(' ');
-   const m=candidates.match(/R\$\s*\d{1,4}(?:[.,]\d{1,2})?|\d{1,4}[.,]\d{1,2}|\d{1,4}/i);
-   if(m){const n=parseFloat(m[0].replace(/[^\d,.-]/g,'').replace(',','.'));if(Number.isFinite(n))return n;}
-  }
- }
- return null;
-}
-function extractOffer(text){
- const t=text.replace(/\r/g,'\n');
- const lines=t.split(/\n+/).map(x=>x.trim()).filter(Boolean);
- // Find payment using a currency amount first; this avoids reading the time/date as payment.
- let pay=null;
- const payLine=lines.findIndex(x=>/valor\s*(?:da\s*)?(?:rota|oferta)|pagamento|a receber|total\s*da\s*oferta/i.test(x));
- if(payLine>=0){
-  const chunk=[lines[payLine],...lines.slice(payLine+1,payLine+4)].join(' ');
-  const m=chunk.match(/R\$\s*(\d{1,4}(?:[.,]\d{1,2})?)/i);
-  if(m)pay=parseFloat(m[1].replace(',','.'));
- }
- if(pay===null){const m=t.match(/R\$\s*(\d{1,4}[.,]\d{2})/i);if(m)pay=parseFloat(m[1].replace(',','.'));}
- const bonus=numberNear(t,[/b[oô]nus/i,/adicional/i,/incentivo/i]);
- // Common Envios Extra label is “Coleta à 2,7 km”, not “distância até coleta”.
- let pickup=null;
- for(const line of lines){
-  let m=line.match(/coleta\s*(?:à|a|at[eé])?\s*(\d{1,2}[.,]\d)\s*km/i) || line.match(/(?:at[eé]\s*a\s*coleta|dist[aâ]ncia\s*(?:at[eé]|para)\s*(?:a\s*)?coleta)[^\d]{0,15}(\d{1,2}[.,]\d)\s*km/i);
-  if(m){pickup=parseFloat(m[1].replace(',','.'));break;}
- }
- if(pickup===null) pickup=numberNear(t,[/dist[aâ]ncia\s*(?:at[eé]|para|da)\s*(?:a\s*)?coleta/i,/at[eé]\s*a\s*coleta/i,/buscar\s*em/i,/dist[aâ]ncia\s*de\s*retirada/i]);
- // Route distance may appear as a bare “12 km” under the city/address. Prefer explicit labels,
- // then use another km value distinct from the pickup distance.
- let route=numberNear(t,[/dist[aâ]ncia\s*(?:da\s*)?rota/i,/quil[oô]metros\s*(?:da\s*)?rota/i,/percurso/i,/dist[aâ]ncia\s*total/i]);
- if(route===null){
-  const kms=[]; const re=/(\d{1,3}(?:[.,]\d{1,2})?)\s*km\b/ig; let m;
-  while((m=re.exec(t))!==null){const n=parseFloat(m[1].replace(',','.'));if(Number.isFinite(n)&&!kms.some(v=>Math.abs(v-n)<0.01))kms.push(n);}
-  const other=kms.filter(n=>pickup===null||Math.abs(n-pickup)>0.05);
-  if(other.length) route=other[other.length-1];
- }
- return {pay,bonus,pickup,route};
-}
-$('screenshotFile').addEventListener('change',async e=>{
- const file=e.target.files&&e.target.files[0];if(!file)return;
- if(!file.type.startsWith('image/')){$('scanStatus').textContent='Escolha uma imagem ou captura de tela.';return;}
- $('scanPreview').src=URL.createObjectURL(file);$('scanPreview').classList.remove('hidden');$('scanStatus').textContent='Preparando a imagem para leitura…';
- try{
-  if(!window.Tesseract){$('scanStatus').textContent='Carregando o leitor de texto…';await new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';sc.onload=resolve;sc.onerror=()=>reject(new Error('Não foi possível carregar o leitor. Verifique a conexão com a internet.'));document.head.appendChild(sc);});}
-  $('scanStatus').textContent='Melhorando a imagem para reconhecer os números…';
-  // Aumenta resolução e contraste, útil para prints estreitos do iPhone.
-  const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=URL.createObjectURL(file);});
-  const canvas=document.createElement('canvas');
-  const scale=Math.min(3,Math.max(2,Math.ceil(1400/Math.max(img.naturalWidth,img.naturalHeight))));
-  canvas.width=img.naturalWidth*scale; canvas.height=img.naturalHeight*scale;
-  const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,canvas.width,canvas.height);
-  const pixels=ctx.getImageData(0,0,canvas.width,canvas.height);const d=pixels.data;
-  for(let i=0;i<d.length;i+=4){const g=(d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114);const v=Math.max(0,Math.min(255,(g-128)*1.45+128));d[i]=d[i+1]=d[i+2]=v;}
-  ctx.putImageData(pixels,0,0);
-  $('scanStatus').textContent='Lendo a captura ampliada. Isso pode levar alguns segundos…';
-  const result=await Tesseract.recognize(canvas,'por+eng',{logger:m=>{if(m.status==='recognizing text')$('scanStatus').textContent='Lendo texto… '+Math.round((m.progress||0)*100)+'%';}});
-  const text=result.data.text||'';$('ocrText').value=text;$('ocrDetails').classList.remove('hidden');
-  const found=extractOffer(text), applied=[];
-  // Só atualiza valores identificados com confiança razoável; nunca mexe nos custos e na meta.
-  if(found.pay!==null){$('payment').value=found.pay.toFixed(2);applied.push('pagamento');}
-  if(found.bonus!==null){$('bonus').value=found.bonus.toFixed(2);applied.push('bônus');}
-  if(found.pickup!==null){$('pickup').value=found.pickup.toFixed(1);applied.push('distância até coleta');}
-  if(found.route!==null){$('routeKm').value=found.route.toFixed(1);applied.push('distância da rota');}
-  calc();
-  if(applied.length){$('scanStatus').textContent='Leitura concluída. Preenchidos: '+applied.join(', ')+'. Os resultados foram calculados automaticamente. Confira os campos e o texto identificado antes de usar a estimativa.';document.querySelector('#scanCard').scrollIntoView({behavior:'smooth',block:'start'});}
-  else $('scanStatus').textContent='A imagem foi lida, mas não consegui identificar com segurança os valores da oferta. Veja “Texto identificado” e preencha os campos manualmente.';
- }catch(err){$('scanStatus').textContent='Não foi possível ler a imagem: '+err.message+' Você pode preencher os valores manualmente.';}
-});
 if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 calc();renderHistory();
 </script>
