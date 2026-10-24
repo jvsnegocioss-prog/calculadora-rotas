@@ -56,8 +56,7 @@ main{max-width:760px;margin:0 auto;padding:16px;display:grid;gap:14px}.card{back
 <div class="row"><span>Pagamento mínimo para sua meta</span><strong id="minimum">R$ 24,26</strong></div>
 </div>
 </div>
-<div class="buttons"><button id="save" class="primary">＋ Salvar resultado</button><button id="reset" class="secondary">Restaurar exemplo</button></div>
-<div class="install-tip" id="installHelp"><strong>Instalar no iPhone:</strong> publique esta pasta em um endereço HTTPS; abra o link no Safari, toque em Compartilhar e escolha “Adicionar à Tela de Início”.</div>
+<div class="buttons"><button id="save" class="primary">＋ Salvar resultado</button><button id="reset" class="secondary">Limpar tudo</button></div>
 </section>
 <section class="card full-card">
 <h2>4. Histórico salvo neste aparelho</h2>
@@ -104,7 +103,7 @@ function renderHistory(){
 }
 $('save').addEventListener('click',()=>{const c=calc();if(c.km<=0||val('consumption')<=0||c.received<=0){alert('Preencha pagamento, distâncias e consumo corretamente antes de salvar.');return}
  const h=getHistory();h.unshift({...c,date:new Date().toLocaleString('pt-BR'),inputs:c.inputs});setHistory(h.slice(0,100));$('save').textContent='✓ Rota salva';setTimeout(()=>$('save').textContent='＋ Salvar resultado',1400)});
-$('reset').addEventListener('click',()=>{const defaults={payment:'19.80',bonus:'0',pickup:'2.7',routeKm:'12',fuelPrice:'7.29',consumption:'9',otherCost:'0.15',target:'1.50'};Object.entries(defaults).forEach(([id,v])=>$(id).value=v);calc()});
+$('reset').addEventListener('click',()=>{ids.forEach(id=>$(id).value='');calc();$('save').textContent='＋ Salvar resultado'});
 $('clear').addEventListener('click',()=>{if(confirm('Apagar todo o histórico salvo neste aparelho?')){localStorage.removeItem('rotasHistory');renderHistory()}});
 $('export').addEventListener('click',()=>{const h=getHistory();if(!h.length){alert('Não há rotas salvas para exportar.');return}
  const rows=[['Data','Recebimento (R$)','Distância total (km)','Gasolina (R$)','Outros custos (R$)','Sobra (R$)','Sobra por km (R$)'],...h.map(x=>[x.date,x.received.toFixed(2),x.km.toFixed(2),x.fuelCost.toFixed(2),x.wearCost.toFixed(2),x.net.toFixed(2),x.perKm.toFixed(2)])];
