@@ -130,8 +130,8 @@ function numberNear(text, labels){
  for(let i=0;i<lines.length;i++){
   const line=lines[i];
   if(labels.some(re=>re.test(line))){
-   const candidates=[line,...lines.slice(i+1,Math.min(lines.length,i+3))].join(' ');
-   const m=candidates.match(/(?:R\$\s*)?\d{1,4}(?:[.,]\d{1,2})?|\d{1,3}(?:[.,]\d)?\s*km/i);
+   const candidates=[line,...lines.slice(i+1,Math.min(lines.length,i+4))].join(' ');
+   const m=candidates.match(/R\$\s*\d{1,4}(?:[.,]\d{1,2})?|\d{1,4}[.,]\d{1,2}|\d{1,4}/i);
    if(m){const n=parseFloat(m[0].replace(/[^\d,.-]/g,'').replace(',','.'));if(Number.isFinite(n))return n;}
   }
  }
@@ -139,10 +139,33 @@ function numberNear(text, labels){
 }
 function extractOffer(text){
  const t=text.replace(/\r/g,'\n');
- const pay=numberNear(t,[/valor\s*(?:da\s*)?(?:rota|oferta|total|a receber)/i,/pagamento/i,/ganhe/i,/receba/i,/total\s*da\s*oferta/i]);
+ const lines=t.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+ // Find payment using a currency amount first; this avoids reading the time/date as payment.
+ let pay=null;
+ const payLine=lines.findIndex(x=>/valor\s*(?:da\s*)?(?:rota|oferta)|pagamento|a receber|total\s*da\s*oferta/i.test(x));
+ if(payLine>=0){
+  const chunk=[lines[payLine],...lines.slice(payLine+1,payLine+4)].join(' ');
+  const m=chunk.match(/R\$\s*(\d{1,4}(?:[.,]\d{1,2})?)/i);
+  if(m)pay=parseFloat(m[1].replace(',','.'));
+ }
+ if(pay===null){const m=t.match(/R\$\s*(\d{1,4}[.,]\d{2})/i);if(m)pay=parseFloat(m[1].replace(',','.'));}
  const bonus=numberNear(t,[/b[oô]nus/i,/adicional/i,/incentivo/i]);
- const pickup=numberNear(t,[/dist[aâ]ncia\s*(?:at[eé]|para|da)\s*(?:a\s*)?coleta/i,/at[eé]\s*a\s*coleta/i,/buscar\s*em/i,/dist[aâ]ncia\s*de\s*retirada/i]);
- const route=numberNear(t,[/dist[aâ]ncia\s*(?:da\s*)?rota/i,/quil[oô]metros\s*(?:da\s*)?rota/i,/percurso/i,/dist[aâ]ncia\s*total/i]);
+ // Common Envios Extra label is “Coleta à 2,7 km”, not “distância até coleta”.
+ let pickup=null;
+ for(const line of lines){
+  let m=line.match(/coleta\s*(?:à|a|at[eé])?\s*(\d{1,2}[.,]\d)\s*km/i) || line.match(/(?:at[eé]\s*a\s*coleta|dist[aâ]ncia\s*(?:at[eé]|para)\s*(?:a\s*)?coleta)[^\d]{0,15}(\d{1,2}[.,]\d)\s*km/i);
+  if(m){pickup=parseFloat(m[1].replace(',','.'));break;}
+ }
+ if(pickup===null) pickup=numberNear(t,[/dist[aâ]ncia\s*(?:at[eé]|para|da)\s*(?:a\s*)?coleta/i,/at[eé]\s*a\s*coleta/i,/buscar\s*em/i,/dist[aâ]ncia\s*de\s*retirada/i]);
+ // Route distance may appear as a bare “12 km” under the city/address. Prefer explicit labels,
+ // then use another km value distinct from the pickup distance.
+ let route=numberNear(t,[/dist[aâ]ncia\s*(?:da\s*)?rota/i,/quil[oô]metros\s*(?:da\s*)?rota/i,/percurso/i,/dist[aâ]ncia\s*total/i]);
+ if(route===null){
+  const kms=[]; const re=/(\d{1,3}(?:[.,]\d{1,2})?)\s*km\b/ig; let m;
+  while((m=re.exec(t))!==null){const n=parseFloat(m[1].replace(',','.'));if(Number.isFinite(n)&&!kms.some(v=>Math.abs(v-n)<0.01))kms.push(n);}
+  const other=kms.filter(n=>pickup===null||Math.abs(n-pickup)>0.05);
+  if(other.length) route=other[other.length-1];
+ }
  return {pay,bonus,pickup,route};
 }
 $('screenshotFile').addEventListener('change',async e=>{
